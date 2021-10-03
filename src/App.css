@@ -28,6 +28,7 @@ body{
 .app__stats{
     display: flex;
     justify-content: space-between;
+    gap: 1em;
 }
 
 @media screen and (max-width: 990px) {

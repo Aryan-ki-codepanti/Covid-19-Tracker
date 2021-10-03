@@ -8,13 +8,25 @@ import {
     CardContent,
 } from "@material-ui/core";
 import InfoBox from "./InfoBox";
+import Table  from "./Table";
 import Map from "./Map";
+import { prettyPrintStat, sortData } from "./util";
+import LineGraph from "./LineGraph";
+import "leaflet/dist/leaflet.css";
+
 function App() {
     //State -> variables in react
 
     const [countries, setCountries] = useState([]);
     const [country, setCountry] = useState("worldwide");
     const [countryInfo, setCountryInfo] = useState({});
+    const [tableData, setTableData] = useState([]);
+    const [mapCenter , setMapCenter] = useState({
+        lat: 34.80746 ,
+        lng: -40.4796
+    });
+    const [mapZoom , setMapZoom] = useState(3);
+    const [mapCountries , setMapCountries] = useState([]);
 
     // runs on first mount only => component did mount
 
@@ -32,6 +44,8 @@ function App() {
         const parsedData = await data.json();
         setCountry(prev => event.target.value);
         setCountryInfo(prev => parsedData);
+        setMapCenter([parsedData.countryInfo.lat , parsedData.countryInfo.long]);
+        setMapZoom(4);
     };
 
     useEffect(() => {
@@ -55,8 +69,11 @@ function App() {
                 name: country.country,
                 value: country.countryInfo.iso2,
             }));
-            console.log(countriesData);
+            const sortedData = sortData(parsedData);
+            console.log(parsedData);
             setCountries(prev => countriesData);
+            setTableData(prev => sortedData);
+            setMapCountries(prev => parsedData);
         };
         getCountries();
     }, []);
@@ -95,32 +112,36 @@ function App() {
                 <div className="app__stats">
                     <InfoBox
                         title="Coronavirus Cases"
-                        cases={countryInfo.todayCases}
-                        total={countryInfo.cases}
+                        cases={prettyPrintStat(countryInfo.todayCases)}
+                        total={prettyPrintStat(countryInfo.cases)}
                     />
                     <InfoBox
                         title="Recovered"
-                        cases={countryInfo.todayRecovered}
-                        total={countryInfo.recovered}
+                        cases={prettyPrintStat(countryInfo.todayRecovered)}
+                        total={prettyPrintStat(countryInfo.recovered)}
                     />
                     <InfoBox
                         title="Deaths"
-                        cases={countryInfo.todayDeaths}
-                        total={countryInfo.deaths}
+                        cases={prettyPrintStat(countryInfo.todayDeaths)}
+                        total={prettyPrintStat(countryInfo.deaths)}
                     />
                 </div>
 
-                <Map />
+                <Map 
+                    countries={mapCountries}
+                    center={mapCenter}
+                    zoom={mapZoom}
+                />
             </div>
 
             <Card className="app__right">
                 <CardContent>
                     <h3> Live Cases by country </h3>
+                        <Table countries={tableData} />
 
                     <h3> Worldwide new cases </h3>
+                    <LineGraph />
                 </CardContent>
-                {/* Table */}
-                {/* Graph  */}
             </Card>
         </div>
     );
