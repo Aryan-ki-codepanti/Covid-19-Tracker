@@ -1,6 +1,7 @@
 
 .infoBox {
     flex: 1;
+    cursor: pointer;
 }
 
 .infoBox__cases{
@@ -15,4 +16,20 @@
     font-weight: 700 !important;
     font-size: 0.9rem !important;
     margin-top: 1rem !important;
+}
+
+
+.infoBox--cases{
+    border-top: 10px solid #CC1034;
+}
+
+.infoBox--recovered{
+    border-top: 10px solid #7dd71d;
+}
+.infoBox--deaths{
+    border-top: 10px solid #fb4443;
+}
+
+.infoBox--textGreen{
+    color: lightgreen !important;
 }

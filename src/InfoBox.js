@@ -3,18 +3,18 @@ import "./InfoBox.css";
 import { Card , CardContent , Typography } from '@material-ui/core';
 
 const InfoBox = (props) => {
-    const {title , cases , total} = props;
+    const {title , cases , type ,total , active , ...rest} = props;
     return (
-        <Card className="infoBox">
+        <Card onClick={rest.onClick} className={`infoBox ${active && `infoBox--${type}`}`} >
             <CardContent>
                 <Typography className="infoBox__title" color="textSecondary">
                     {title}
                 </Typography>
 
-                <h2 className="infoBox__cases"> {cases} </h2>
+                <h2 className={`infoBox__cases ${type === "recovered" ? "infoBox--textGreen" : ""}`}> {cases} </h2>
 
                 <Typography className="infoBox__total" color="textSecondary">
-                    {total}
+                    {total} total
                 </Typography>
             </CardContent>
         </Card>
